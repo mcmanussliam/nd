@@ -1,7 +1,21 @@
 # `nd-cli`
 
-`nd-cli` is a terminal directory navigator.
-It displays subdirectories, lets you move using numeric choices, and prints the final selected path when you quit.
+Have you ever found yourself constantly doing `ls cd ls cd ls cd`? Well have I
+got a solution for you!
+
+Rather than using something like `cd $(fzf)` where you have to manually search
+for the directory, this tool works off of numbering and progressively revealing layers
+of directories.
+
+```bash
+Path: /current/working/dir
+Commands: [1..3] select, [b] back, [q] quit
+
+┃ 1. src
+┃ 2. docs
+┃ 3. target
+>
+```
 
 ## Installation
 
@@ -9,46 +23,27 @@ It displays subdirectories, lets you move using numeric choices, and prints the 
 cargo install nd-cli
 ```
 
-### Enable shell integration (required to change directories from your current shell).
+### Setup shell
 
-The project crate is `nd-cli`, and the binary/shell command is `nd`:
+Run the following command for your shell, this will add the `nd` command to
+your config allowing you to navigate to the directory after quitting.
 
 ```bash
 # zsh
-echo 'eval "$(nd init zsh)"' >> ~/.zshrc
+echo 'eval "$(nd-cli init zsh)"' >> ~/.zshrc
 source ~/.zshrc
 
 # bash
-echo 'eval "$(nd init bash)"' >> ~/.bashrc
+echo 'eval "$(nd-cli init bash)"' >> ~/.bashrc
 source ~/.bashrc
 
 # fish
-echo 'nd init fish | source' >> ~/.config/fish/config.fish
+echo 'nd-cli init fish | source' >> ~/.config/fish/config.fish
 source ~/.config/fish/config.fish
 
 # powershell
 Add-Content -Path $PROFILE -Value 'Invoke-Expression (& nd init powershell)'
 . $PROFILE
-```
-
-Use `nd` to navigate and update your current shell directory:
-
-```bash
-nd
-```
-
-Without shell integration, you can still run the binary directly:
-
-```bash
-nd
-```
-
-After shell integration, `nd` is a shell function that runs `nd` and then `cd`s to the selected directory.
-
-For local development:
-
-```bash
-cargo run -- --show-hidden
 ```
 
 ## Usage
@@ -57,13 +52,13 @@ cargo run -- --show-hidden
 nd
 ```
 
-Commands inside the TUI:
+**Commands**:
 
 - `1..N` select a directory
 - `b` go to parent directory
 - `q` quit and print selected path
 
-Flags:
+**Flags**:
 
 - `--show-hidden` include directories that start with `.`
 - `--start-dir <PATH>` start browsing from a specific directory

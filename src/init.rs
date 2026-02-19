@@ -6,11 +6,11 @@ pub fn init_script(shell: Shell) -> &'static str {
             r#"
 nd() {
   if [ "$1" = "init" ]; then
-    command nd "$@"
+    command nd-cli "$@"
     return
   fi
   local target
-  target="$(command nd "$@")" || return
+  target="$(command nd-cli "$@")" || return
   [ -n "$target" ] && cd "$target"
 }
 "#
@@ -20,10 +20,10 @@ nd() {
             r#"
 function nd
   if test "$argv[1]" = "init"
-    command nd $argv
+    command nd-cli $argv
     return
   end
-  set target (command nd $argv)
+  set target (command nd-cli $argv)
   or return
   test -n "$target"; and cd "$target"
 end
@@ -39,11 +39,11 @@ function nd
   )
 
   if ($Args.Length -gt 0 -and $Args[0] -eq "init") {
-    & nd @Args
+    & nd-cli @Args
     return
   }
 
-  $target = & nd @Args
+  $target = & nd-cli @Args
   if ($LASTEXITCODE -ne 0) {
     return
   }
