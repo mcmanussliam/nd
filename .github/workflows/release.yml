@@ -31,10 +31,15 @@ jobs:
         run: cargo package --locked
 
       - name: Verify tag matches crate version
+        shell: bash
         run: |
-          crate_version="$(grep -m1 '^version = ' Cargo.toml | cut -d '\"' -f2)"
+          crate_version="$(python3 -c 'import tomllib; print(tomllib.load(open("Cargo.toml","rb"))["package"]["version"])')"
           tag_version="${GITHUB_REF_NAME#v}"
-          if [ "$crate_version" != "$tag_version" ]; then
+
+          echo "Cargo.toml version: $crate_version"
+          echo "Tag version:       $tag_version"
+
+          if [[ "$crate_version" != "$tag_version" ]]; then
             echo "Tag version ($tag_version) does not match Cargo.toml version ($crate_version)."
             exit 1
           fi
